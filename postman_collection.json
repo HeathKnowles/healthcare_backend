@@ -1,0 +1,322 @@
+{
+  "info": {
+    "name": "Healthcare Backend API",
+    "_postman_id": "b1b4b4d7-0d4f-4b75-9f0f-3b1b4b9f3a1c",
+    "description": "Collection for testing authentication, patients, doctors, and mappings.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "patientId",
+      "value": "1"
+    },
+    {
+      "key": "doctorId",
+      "value": "1"
+    },
+    {
+      "key": "mappingId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"password\": \"StrongPass123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.access) {",
+                  "  pm.collectionVariables.set('accessToken', data.access);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jane@example.com\",\n  \"password\": \"StrongPass123!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Amy\",\n  \"last_name\": \"Smith\",\n  \"date_of_birth\": \"1990-05-10\",\n  \"gender\": \"female\",\n  \"phone\": \"555-111-2222\",\n  \"email\": \"amy@example.com\",\n  \"address\": \"123 Main St\",\n  \"notes\": \"Allergic to penicillin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Patient",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{patientId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{patientId}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{patientId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{patientId}}", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Amy\",\n  \"last_name\": \"Smith\",\n  \"date_of_birth\": \"1990-05-10\",\n  \"gender\": \"female\",\n  \"phone\": \"555-222-3333\",\n  \"email\": \"amy@example.com\",\n  \"address\": \"123 Main St\",\n  \"notes\": \"Updated note\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/patients/{{patientId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "patients", "{{patientId}}", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Create Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Sam\",\n  \"last_name\": \"Lee\",\n  \"specialty\": \"Cardiology\",\n  \"license_number\": \"LIC-12345\",\n  \"years_experience\": 8,\n  \"phone\": \"555-333-4444\",\n  \"email\": \"sam.lee@example.com\",\n  \"bio\": \"Board-certified cardiologist.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Doctors",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Doctor",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "{{doctorId}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Doctor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "{{doctorId}}", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Sam\",\n  \"last_name\": \"Lee\",\n  \"specialty\": \"Cardiology\",\n  \"license_number\": \"LIC-12345\",\n  \"years_experience\": 9,\n  \"phone\": \"555-333-4444\",\n  \"email\": \"sam.lee@example.com\",\n  \"bio\": \"Updated bio.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Doctor",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/{{doctorId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "{{doctorId}}", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mappings",
+      "item": [
+        {
+          "name": "Assign Doctor to Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": {{patientId}},\n  \"doctor_id\": {{doctorId}}\n}"
+            }
+          }
+        },
+        {
+          "name": "List Mappings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Mappings by Patient",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/{{patientId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", "{{patientId}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Mapping",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/mappings/{{mappingId}}/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "mappings", "{{mappingId}}", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
